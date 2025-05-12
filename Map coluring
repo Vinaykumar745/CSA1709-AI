@@ -1,0 +1,50 @@
+# Define the map as a graph
+neighbors = {
+    'WA': ['NT', 'SA'],
+    'NT': ['WA', 'SA', 'Q'],
+    'SA': ['WA', 'NT', 'Q', 'NSW', 'V'],
+    'Q': ['NT', 'SA', 'NSW'],
+    'NSW': ['Q', 'SA', 'V'],
+    'V': ['SA', 'NSW', 'T'],
+    'T': ['V']
+}
+
+# List of colors
+colors = ['Red', 'Green', 'Blue']
+
+# Function to check if assignment is valid
+def is_valid(assignment, region, color):
+    for neighbor in neighbors.get(region, []):
+        if assignment.get(neighbor) == color:
+            return False
+    return True
+
+# Backtracking CSP solver
+def backtrack(assignment):
+    # If all regions are assigned, return the assignment
+    if len(assignment) == len(neighbors):
+        return assignment
+
+    # Select unassigned region
+    unassigned = [r for r in neighbors if r not in assignment]
+    region = unassigned[0]
+
+    for color in colors:
+        if is_valid(assignment, region, color):
+            assignment[region] = color
+            result = backtrack(assignment)
+            if result:
+                return result
+            del assignment[region]  # backtrack
+
+    return None
+
+# Solve the map coloring problem
+solution = backtrack({})
+
+# Print the solution
+if solution:
+    for region in sorted(solution):
+        print(f"{region}: {solution[region]}")
+else:
+    print("No solution found.")
