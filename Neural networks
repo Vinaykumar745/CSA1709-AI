@@ -1,0 +1,73 @@
+import numpy as np
+
+# Sigmoid activation and its derivative
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+    
+def sigmoid_derivative(x):
+    return x * (1 - x)
+
+# Training data: XOR problem
+X = np.array([[0, 0],
+              [0, 1],
+              [1, 0],
+              [1, 1]])
+
+# Expected output: XOR truth table
+y = np.array([[0],
+              [1],
+              [1],
+              [0]])
+
+# Set seed for reproducibility
+np.random.seed(42)
+
+# Initialize weights and biases
+input_layer_size = 2
+hidden_layer_size = 4
+output_layer_size = 1
+
+# Weights
+weights_input_hidden = np.random.uniform(size=(input_layer_size, hidden_layer_size))
+weights_hidden_output = np.random.uniform(size=(hidden_layer_size, output_layer_size))
+
+# Biases
+bias_hidden = np.random.uniform(size=(1, hidden_layer_size))
+bias_output = np.random.uniform(size=(1, output_layer_size))
+
+# Training parameters
+learning_rate = 0.5
+epochs = 10000
+
+# Training loop
+for epoch in range(epochs):
+    # Forward propagation
+    hidden_input = np.dot(X, weights_input_hidden) + bias_hidden
+    hidden_output = sigmoid(hidden_input)
+    
+    final_input = np.dot(hidden_output, weights_hidden_output) + bias_output
+    predicted_output = sigmoid(final_input)
+
+    # Compute error
+    error = y - predicted_output
+
+    # Backpropagation
+    d_output = error * sigmoid_derivative(predicted_output)
+    
+    error_hidden = d_output.dot(weights_hidden_output.T)
+    d_hidden = error_hidden * sigmoid_derivative(hidden_output)
+
+    # Update weights and biases
+    weights_hidden_output += hidden_output.T.dot(d_output) * learning_rate
+    weights_input_hidden += X.T.dot(d_hidden) * learning_rate
+    bias_output += np.sum(d_output, axis=0, keepdims=True) * learning_rate
+    bias_hidden += np.sum(d_hidden, axis=0, keepdims=True) * learning_rate
+
+    # Optional: print loss
+    if epoch % 1000 == 0:
+        loss = np.mean(np.square(error))
+        print(f"Epoch {epoch}, Loss: {loss:.4f}")
+
+# Final Output
+print("\nFinal predictions:")
+print(predicted_output.round(2))
