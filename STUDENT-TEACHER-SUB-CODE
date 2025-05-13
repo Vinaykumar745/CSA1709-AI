@@ -1,0 +1,27 @@
+% Facts
+
+% student(Name, RollNumber).
+student(john, 101).
+student(mary, 102).
+student(sam, 103).
+
+% teacher(Name, SubjectCode).
+teacher(mr_smith, cs101).
+teacher(ms_clark, cs102).
+
+% teaches(TeacherName, SubjectCode).
+teaches(mr_smith, cs101).
+teaches(ms_clark, cs102).
+
+% enrolled(RollNumber, SubjectCode).
+enrolled(101, cs101).
+enrolled(102, cs102).
+enrolled(103, cs101).
+
+% Rules
+
+% subject_teacher(StudentName, TeacherName).
+subject_teacher(StudentName, TeacherName) :-
+    student(StudentName, RollNumber),
+    enrolled(RollNumber, SubjectCode),
+    teaches(TeacherName, SubjectCode).
