@@ -1,0 +1,14 @@
+% Facts: person(Name, dob(Year, Month, Day))
+person(john, dob(1995, 5, 21)).
+person(mary, dob(1998, 12, 10)).
+person(sam, dob(2000, 3, 5)).
+person(alice, dob(1992, 8, 17)).
+person(bob, dob(1995, 5, 21)).
+
+% Rule: get all people born in a specific year
+born_in_year(Name, Year) :-
+    person(Name, dob(Year, _, _)).
+
+% Rule: get all people born on a specific day
+born_on(Name, Year, Month, Day) :-
+    person(Name, dob(Year, Month, Day)).
