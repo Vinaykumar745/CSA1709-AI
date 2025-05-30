@@ -1,0 +1,35 @@
+% --- Disease-to-Diet Mapping ---More actions
+
+% disease_diet(Disease, DietRecommendation)
+
+disease_diet(diabetes, 
+  'Low sugar diet, high fiber foods, complex carbs like whole grains, vegetables, lean proteins').
+
+disease_diet(hypertension, 
+  'Low sodium diet, fruits, vegetables, whole grains, lean proteins, avoid processed foods').
+
+disease_diet(obesity, 
+  'Low fat, high fiber, calorie-restricted diet with regular meals and no sugary drinks').
+
+disease_diet(anemia, 
+  'Iron-rich foods such as leafy greens, red meat, legumes, vitamin C-rich foods for absorption').
+
+disease_diet(kidney_disease, 
+  'Low protein, low sodium, controlled potassium and phosphorus intake, avoid salty foods').
+
+disease_diet(gastritis, 
+  'Bland diet, avoid spicy and acidic foods, eat frequent small meals, include non-citrus fruits').
+
+% Default fallback
+disease_diet(_, 
+  'Consult a physician for a personalized diet plan based on your condition.').
+
+% --- Suggest Diet Based on Disease ---
+
+suggest_diet(Disease) :-
+    ( disease_diet(Disease, Diet),
+      \+ Disease = _ ->
+        format('Suggested diet for ~w: ~w~n', [Disease, Diet])
+    ;
+        format('No specific diet found for "~w". Please consult a doctor.~n', [Disease])
+    ).
