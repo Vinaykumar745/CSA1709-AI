@@ -1,0 +1,9 @@
+% Base caseMore actions
+sum(1, 1).
+
+% Recursive case
+sum(N, Total) :-
+    N > 1,
+    N1 is N - 1,
+    sum(N1, TempTotal),
+    Total is TempTotal + N.
