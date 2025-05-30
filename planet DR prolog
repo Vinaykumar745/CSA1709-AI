@@ -1,0 +1,27 @@
+% planet(Name, OrderFromSun, DistanceFromSunInMillionKm, DiameterInKm, HasRings).More actions
+planet(mercury, 1, 58, 4879, no).
+planet(venus,   2, 108, 12104, no).
+planet(earth,   3, 150, 12742, no).
+planet(mars,    4, 228, 6779, no).
+planet(jupiter, 5, 778, 139820, yes).
+planet(saturn,  6, 1430, 116460, yes).
+planet(uranus,  7, 2870, 50724, yes).
+planet(neptune, 8, 4500, 49244, yes).
+
+% Rule to find if a planet is an inner or outer planet.
+inner_planet(P) :- planet(P, Order, _, _, _), Order =< 4.
+outer_planet(P) :- planet(P, Order, _, _, _), Order > 4.
+
+% Rule to find planets with rings.
+has_rings(P) :- planet(P, _, _, _, yes).
+
+% Rule to find the distance between two planets (approx).
+distance_between(P1, P2, Distance) :-
+    planet(P1, _, D1, _, _),
+    planet(P2, _, D2, _, _),
+    Distance is abs(D1 - D2).
+
+% Example queries:
+% ?- inner_planet(X).
+% ?- has_rings(X).
+% ?- distance_between(earth, mars, D).
