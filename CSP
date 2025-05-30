@@ -1,0 +1,54 @@
+# Define the CSP for Map ColoringMore actions
+
+# Regions (variables)
+regions = ['WA', 'NT', 'SA', 'Q', 'NSW', 'V', 'T']
+
+# Colors (domain)
+colors = ['Red', 'Green', 'Blue']
+
+# Adjacency (constraints)
+adjacency = {
+    'WA': ['NT', 'SA'],
+    'NT': ['WA', 'SA', 'Q'],
+    'SA': ['WA', 'NT', 'Q', 'NSW', 'V'],
+    'Q': ['NT', 'SA', 'NSW'],
+    'NSW': ['SA', 'Q', 'V'],
+    'V': ['SA', 'NSW'],
+    'T': []
+}
+
+def is_valid(assignment, region, color):
+    for neighbor in adjacency[region]:
+        if neighbor in assignment and assignment[neighbor] == color:
+            return False
+    return True
+
+def backtrack(assignment):
+    # If assignment is complete
+    if len(assignment) == len(regions):
+        return assignment
+
+    # Select unassigned region
+    unassigned = [r for r in regions if r not in assignment]
+    region = unassigned[0]
+
+    for color in colors:
+        if is_valid(assignment, region, color):
+            assignment[region] = color
+            result = backtrack(assignment)
+            if result:
+                return result
+            del assignment[region]  # backtrack
+
+    return None
+
+# Run the CSP solver
+solution = backtrack({})
+
+# Print the solution
+if solution:
+    print("Map Coloring Solution:")
+    for region in regions:
+        print(f"{region}: {solution[region]}")
+else:
+    print("No solution found.")
