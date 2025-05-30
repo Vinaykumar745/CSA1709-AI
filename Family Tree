@@ -1,0 +1,72 @@
+% --- Basic Facts ---More actions
+
+% gender
+male(john).
+male(paul).
+male(mike).
+male(steve).
+
+female(lisa).
+female(mary).
+female(susan).
+female(anna).
+
+% parent(child, parent)
+parent(paul, john).
+parent(paul, lisa).
+
+parent(mary, john).
+parent(mary, lisa).
+
+parent(mike, paul).
+parent(mike, susan).
+
+parent(anna, paul).
+parent(anna, susan).
+
+parent(steve, mary).
+parent(steve, mike).
+
+% --- Rules ---
+
+% father(X, Y): X is the father of Y
+father(X, Y) :- parent(Y, X), male(X).
+
+% mother(X, Y): X is the mother of Y
+mother(X, Y) :- parent(Y, X), female(X).
+
+% child(X, Y): X is the child of Y
+child(X, Y) :- parent(X, Y).
+
+% sibling(X, Y): X and Y have at least one common parent
+sibling(X, Y) :- 
+    parent(X, P),
+    parent(Y, P),
+    X \= Y.
+
+% grandparent(X, Y): X is the grandparent of Y
+grandparent(X, Y) :-
+    parent(Y, Z),
+    parent(Z, X).
+
+% grandfather(X, Y): X is grandfather of Y
+grandfather(X, Y) :-
+    grandparent(X, Y),
+    male(X).
+
+% grandmother(X, Y): X is grandmother of Y
+grandmother(X, Y) :-
+    grandparent(X, Y),
+    female(X).
+
+% uncle(X, Y): X is an uncle of Y
+uncle(X, Y) :-
+    parent(Y, P),
+    sibling(X, P),
+    male(X).
+
+% aunt(X, Y): X is an aunt of Y
+aunt(X, Y) :-
+    parent(Y, P),
+    sibling(X, P),
+    female(X).
