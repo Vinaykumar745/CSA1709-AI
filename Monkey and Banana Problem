@@ -1,0 +1,48 @@
+% state(MonkeyPos, BoxPos, MonkeyOnBox, HasBanana)More actions
+
+% goal state: monkey has banana
+goal(state(_, _, _, has)).
+
+% actions that transition between states
+
+% 1. Monkey walks from one place to another
+move(state(Monkey, Box, onfloor, hasnot),
+     walk(Monkey, NewMonkey),
+     state(NewMonkey, Box, onfloor, hasnot)).
+
+% 2. Monkey pushes the box to a new location
+move(state(Monkey, Monkey, onfloor, hasnot),
+     push(Monkey, NewPos),
+     state(NewPos, NewPos, onfloor, hasnot)).
+
+% 3. Monkey climbs the box
+move(state(Pos, Pos, onfloor, hasnot),
+     climb,
+     state(Pos, Pos, onbox, hasnot)).
+
+% 4. Monkey grasps banana (if on box and under it)
+move(state(middle, middle, onbox, hasnot),
+     grasp,
+     state(middle, middle, onbox, has)).
+
+% solve the problem by applying a sequence of moves leading to goal
+solve :-
+    plan(state(atdoor, atwindow, onfloor, hasnot), [], Plan),
+    write('Plan to get the banana:'), nl,
+    write_steps(Plan).
+
+% base case: goal state reached
+plan(State, Moves, Moves) :-
+    goal(State).
+
+% recursive case: apply a move and continue
+plan(State, MovesSoFar, Plan) :-
+    move(State, Move, NewState),
+    \+ member(Move, MovesSoFar),  % avoid cycles
+    plan(NewState, [Move | MovesSoFar], Plan).
+
+% helper to print steps in order
+write_steps([]).
+write_steps([Step | Rest]) :-
+    write_steps(Rest),
+    write(Step), nl.
